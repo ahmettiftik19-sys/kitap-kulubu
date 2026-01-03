@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Kitap Okuma Kulübü</title>
+<style>
+body { font-family: Arial; background:#f4f4f4; padding:20px; }
+h1,h2 { text-align:center; }
+table { width:100%; border-collapse:collapse; background:white; }
+th,td { border:1px solid #ccc; padding:8px; text-align:center; }
+input { width:95%; }
+button { padding:5px 10px; }
+.geldi { background:#c8f7c5; }
+.gelmedi { background:#f7c5c5; }
+</style>
+</head>
+<body>
+
+<h1>📚 Kitap Okuma Kulübü</h1>
+<h2>Başkanlar: Kerem Toç & Umut Toç</h2>
+
+<table>
+<tr>
+<th>İsim</th>
+<th>Okuduğu Kitap</th>
+<th>Durum</th>
+</tr>
+
+<script>
+const kisiler = [
+"Kerem Toç","Umut Toç","Ahmet Tiftik","Yağmur Nisa Selet",
+"Arda Efe Akpınar","Saim Efe","Hüma",
+"Muhammed Hamza","Talha","Nil"
+];
+
+kisiler.forEach((isim,i)=>{
+document.write(`
+<tr id="row${i}">
+<td>${isim}</td>
+<td><input id="kitap${i}" oninput="kaydet()"></td>
+<td>
+<button onclick="geldi(${i})">+</button>
+<button onclick="gelmedi(${i})">−</button>
+</td>
+</tr>
+`);
+});
+
+function geldi(i){
+const r=document.getElementById("row"+i);
+r.className="geldi";
+localStorage.setItem("durum"+i,"geldi");
+}
+function gelmedi(i){
+const r=document.getElementById("row"+i);
+r.className="gelmedi";
+localStorage.setItem("durum"+i,"gelmedi");
+}
+function kaydet(){
+kisiler.forEach((_,i)=>{
+localStorage.setItem("kitap"+i,
+document.getElementById("kitap"+i).value);
+});
+}
+window.onload=()=>{
+kisiler.forEach((_,i)=>{
+document.getElementById("kitap"+i).value=
+localStorage.getItem("kitap"+i)||"";
+const d=localStorage.getItem("durum"+i);
+if(d) document.getElementById("row"+i).className=d;
+});
+}
+</script>
+
+</table>
+
+</body>
+</html>
