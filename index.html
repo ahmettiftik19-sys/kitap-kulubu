@@ -8,7 +8,7 @@
 body { font-family: Arial; background:#f2f2f2; padding:20px; }
 h1,h2 { text-align:center; }
 table { width:100%; border-collapse:collapse; background:white; }
-th, td { border:1px solid #333; padding:6px; text-align:center; }
+th,td { border:1px solid #333; padding:6px; text-align:center; }
 th { background:#ddd; }
 input { width:95%; }
 button { padding:6px 10px; margin:3px; cursor:pointer; }
@@ -33,7 +33,7 @@ button { padding:6px 10px; margin:3px; cursor:pointer; }
 <br>
 
 <h3>🏆 Bu Hafta En Çok Okuyan</h3>
-<input placeholder="Örn: Ahmet - 120 sayfa">
+<input id="enCok">
 
 <br><br>
 
@@ -52,76 +52,89 @@ const kisiler = [
 "Arda Efe Akpınar","Saim Efe","Hüma","Muhammed Hamza","Talha","Nil"
 ];
 
-let hafta = Number(localStorage.getItem("hafta") || 1);
+let hafta = Number(localStorage.getItem("aktifHafta") || 1);
 document.getElementById("haftaNo").innerText = hafta;
 
-function tabloOlustur(){
-let t = document.getElementById("tablo");
-kisiler.forEach(isim=>{
-t.innerHTML += `
-<tr>
-<td>${isim}</td>
-<td><input></td><td><input type="number"></td>
-<td><input></td><td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>`;
-});
+function bosHaftaVerisi(){
+  return kisiler.map(isim=>({
+    isim,
+    kitap1:"",
+    sayfa1:"",
+    kitap2:"",
+    sayfa2:"",
+    durum:""
+  }));
 }
-tabloOlustur();
 
-function geldi(b){
-let s=b.parentElement.parentElement;
-s.classList.remove("gelmedi");
-s.classList.add("geldi");
-kaydet();
+let veriler = JSON.parse(localStorage.getItem("hafta_"+hafta)) || bosHaftaVerisi();
+
+function tabloyuCiz(){
+  let t = document.getElementById("tablo");
+  t.innerHTML = `
+  <tr>
+  <th>İsim</th><th>Kitap 1</th><th>Sayfa</th>
+  <th>Kitap 2</th><th>Sayfa</th><th>Katılım</th>
+  </tr>`;
+  
+  veriler.forEach((k,i)=>{
+    t.innerHTML += `
+    <tr class="${k.durum}">
+      <td>${k.isim}</td>
+      <td><input value="${k.kitap1}" oninput="guncelle(${i},'kitap1',this.value)"></td>
+      <td><input type="number" value="${k.sayfa1}" oninput="guncelle(${i},'sayfa1',this.value)"></td>
+      <td><input value="${k.kitap2}" oninput="guncelle(${i},'kitap2',this.value)"></td>
+      <td><input type="number" value="${k.sayfa2}" oninput="guncelle(${i},'sayfa2',this.value)"></td>
+      <td>
+        <button onclick="durum(${i},'geldi')">➕</button>
+        <button onclick="durum(${i},'gelmedi')">➖</button>
+      </td>
+    </tr>`;
+  });
 }
-function gelmedi(b){
-let s=b.parentElement.parentElement;
-s.classList.remove("geldi");
-s.classList.add("gelmedi");
-kaydet();
+
+function guncelle(i,alan,deger){
+  veriler[i][alan]=deger;
+  kaydet();
+}
+
+function durum(i,d){
+  veriler[i].durum=d;
+  kaydet();
+  tabloyuCiz();
 }
 
 function kaydet(){
-localStorage.setItem("hafta_"+hafta, document.body.innerHTML);
+  localStorage.setItem("hafta_"+hafta, JSON.stringify(veriler));
 }
-
-function yukle(){
-let v=localStorage.getItem("hafta_"+hafta);
-if(v) document.body.innerHTML=v;
-}
-yukle();
 
 function yeniHafta(){
-hafta++;
-localStorage.setItem("hafta", hafta);
-location.reload();
+  hafta++;
+  localStorage.setItem("aktifHafta", hafta);
+  localStorage.setItem("hafta_"+hafta, JSON.stringify(bosHaftaVerisi()));
+  location.reload();
 }
 
 function gecmisiGoster(){
-let alan=document.getElementById("gecmis");
-alan.innerHTML="<h3>📂 Geçmiş Haftalar</h3>";
-for(let i=1;i<hafta;i++){
-alan.innerHTML+=`<button onclick="haftaAc(${i})">Hafta ${i}</button>`;
-}
+  let a=document.getElementById("gecmis");
+  a.innerHTML="<h3>📂 Geçmiş Haftalar</h3>";
+  for(let i=1;i<hafta;i++){
+    a.innerHTML+=`<button onclick="haftaAc(${i})">Hafta ${i}</button>`;
+  }
 }
 
 function haftaAc(no){
-let v=localStorage.getItem("hafta_"+no);
-if(v){
-document.body.innerHTML=v;
-}
+  localStorage.setItem("aktifHafta", no);
+  location.reload();
 }
 
 function tumunuSifirla(){
-if(confirm("TÜM haftalar silinecek. Emin misin?")){
-localStorage.clear();
-location.reload();
+  if(confirm("HER ŞEY silinecek. Emin misin?")){
+    localStorage.clear();
+    location.reload();
+  }
 }
-}
+
+tabloyuCiz();
 </script>
 
 </body>
