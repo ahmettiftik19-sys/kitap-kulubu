@@ -33,17 +33,13 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs } 
-  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-  // 🔴 BURAYI FIREBASE'DEN ALDIĞIN KODLA DEĞİŞTİR
-  const firebaseConfig<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyCELizvEOUX_dG16HvCCkuRq4lXgRuy300",
     authDomain: "kitap-kulubu-2b920.firebaseapp.com",
@@ -51,17 +47,6 @@
     storageBucket: "kitap-kulubu-2b920.firebasestorage.app",
     messagingSenderId: "678535320880",
     appId: "1:678535320880:web:5d204cbdc94cf42817a4f5"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</scri = {
-    apiKey: "BURAYA",
-    authDomain: "BURAYA",
-    projectId: "BURAYA",
-    storageBucket: "BURAYA",
-    messagingSenderId: "BURAYA",
-    appId: "BURAYA"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -81,38 +66,43 @@
       <td>${isim}</td>
       <td><input></td>
       <td><input type="number"></td>
-      <td><button class="yes" onclick="kaydet('${isim}', true)">+</button></td>
-      <td><button class="no" onclick="kaydet('${isim}', false)">-</button></td>
+      <td><button class="yes">+</button></td>
+      <td><button class="no">-</button></td>
     `;
+
+    tr.querySelector(".yes").onclick = () => kaydet(isim, true, tr);
+    tr.querySelector(".no").onclick  = () => kaydet(isim, false, tr);
+
     table.appendChild(tr);
   });
 
-  async function kaydet(isim, geldi) {
-    const satir = [...table.rows].find(r => r.cells[0]?.innerText === isim);
-    const kitap = satir.cells[1].children[0].value;
-    const sayfa = satir.cells[2].children[0].value;
+  async function kaydet(isim, geldi, tr) {
+    const kitap = tr.cells[1].querySelector("input").value;
+    const sayfa = tr.cells[2].querySelector("input").value;
 
     await addDoc(collection(db, "haftalar"), {
-      isim, kitap, sayfa, geldi, tarih: new Date()
+      isim,
+      kitap,
+      sayfa,
+      geldi,
+      tarih: new Date()
     });
 
     alert("Kaydedildi ✔️");
   }
 
-  async function gecmisiGoster() {
+  window.gecmisiGoster = async function () {
     const snap = await getDocs(collection(db, "haftalar"));
     let yazi = "";
     snap.forEach(d => yazi += JSON.stringify(d.data()) + "\n");
     alert(yazi);
-  }
+  };
 
-  function haftaBitir() {
-    document.querySelectorAll("input").forEach(i => i.value="");
+  window.haftaBitir = function () {
+    document.querySelectorAll("input").forEach(i => i.value = "");
     alert("Yeni haftaya geçildi 📅");
-  }
-
+  };
 </script>
 
 </body>
 </html>
-
