@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -8,38 +7,13 @@
 <style>
 body { font-family: Arial; background:#f2f2f2; padding:20px; }
 h1,h2 { text-align:center; }
-
-table {
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-}
-
-th, td {
-  border:1px solid #333;
-  padding:8px;
-  text-align:center;
-}
-
+table { width:100%; border-collapse:collapse; background:white; }
+th, td { border:1px solid #333; padding:6px; text-align:center; }
 th { background:#ddd; }
-
-input {
-  width:95%;
-}
-
-button {
-  padding:6px 10px;
-  font-size:16px;
-  cursor:pointer;
-}
-
-.geldi {
-  background:#b6fcb6;
-}
-
-.gelmedi {
-  background:#fcb6b6;
-}
+input { width:95%; }
+button { padding:6px 10px; margin:2px; cursor:pointer; }
+.geldi { background:#b6fcb6; }
+.gelmedi { background:#fcb6b6; }
 </style>
 </head>
 
@@ -48,31 +22,39 @@ button {
 <h1>📚 Kitap Okuma Kulübü</h1>
 <h2>Başkanlar: Kerem Toç & Umut Toç</h2>
 
-<h3>Bu Hafta En Çok Okuyan</h3>
-<input placeholder="Örn: Ahmet Tiftik - 120 sayfa">
+<h3>📅 Aktif Hafta: <span id="haftaNo"></span></h3>
+
+<button onclick="yeniHafta()">🆕 Yeni Hafta Başlat</button>
 
 <br><br>
 
-<table>
+<h3>🏆 Bu Hafta En Çok Okuyan</h3>
+<input id="enCok" placeholder="Örn: Ahmet - 120 sayfa">
+
+<br><br>
+
+<table id="tablo">
 <tr>
 <th>İsim</th>
-<th>Okunan Kitap</th>
-<th>Sayfa Sayısı</th>
+<th>Kitap 1</th>
+<th>Sayfa</th>
+<th>Kitap 2</th>
+<th>Sayfa</th>
 <th>Katılım</th>
 </tr>
 
-<tr>
-<td>Kerem Toç</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
+<script>
+const kisiler = [
+"Kerem Toç","Umut Toç","Ahmet Tiftik","Yağmur Nisa Selet",
+"Arda Efe Akpınar","Saim Efe","Hüma","Muhammed Hamza","Talha","Nil"
+];
 
+kisiler.forEach(isim=>{
+document.write(`
 <tr>
-<td>Umut Toç</td>
+<td>${isim}</td>
+<td><input></td>
+<td><input type="number"></td>
 <td><input></td>
 <td><input type="number"></td>
 <td>
@@ -80,104 +62,44 @@ button {
 <button onclick="gelmedi(this)">➖</button>
 </td>
 </tr>
-
-<tr>
-<td>Ahmet Tiftik</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Yağmur Nisa Selet</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Arda Efe Akpınar</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Saim Efe</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Hüma</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Muhammed Hamza</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Talha</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
-
-<tr>
-<td>Nil</td>
-<td><input></td>
-<td><input type="number"></td>
-<td>
-<button onclick="geldi(this)">➕</button>
-<button onclick="gelmedi(this)">➖</button>
-</td>
-</tr>
+`);
+});
+</script>
 
 </table>
 
-<br>
-<h3>📅 Hafta Notu</h3>
-<input placeholder="Örn: 1. Hafta - Herkes geldi">
-
 <script>
-function geldi(btn) {
-  let satir = btn.parentElement.parentElement;
-  satir.classList.remove("gelmedi");
-  satir.classList.add("geldi");
+let hafta = localStorage.getItem("hafta") || 1;
+document.getElementById("haftaNo").innerText = hafta;
+
+function geldi(btn){
+let s=btn.parentElement.parentElement;
+s.classList.remove("gelmedi");
+s.classList.add("geldi");
+kaydet();
 }
 
-function gelmedi(btn) {
-  let satir = btn.parentElement.parentElement;
-  satir.classList.remove("geldi");
-  satir.classList.add("gelmedi");
+function gelmedi(btn){
+let s=btn.parentElement.parentElement;
+s.classList.remove("geldi");
+s.classList.add("gelmedi");
+kaydet();
+}
+
+function kaydet(){
+localStorage.setItem("veri_"+hafta, document.body.innerHTML);
+}
+
+function yukle(){
+let v = localStorage.getItem("veri_"+hafta);
+if(v) document.body.innerHTML = v;
+}
+yukle();
+
+function yeniHafta(){
+hafta++;
+localStorage.setItem("hafta", hafta);
+location.reload();
 }
 </script>
 
