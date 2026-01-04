@@ -14,7 +14,6 @@ input { width:95%; }
 button { padding:6px 10px; margin:3px; cursor:pointer; }
 .geldi { background:#b6fcb6; }
 .gelmedi { background:#fcb6b6; }
-#gecmis button { background:#eee; }
 </style>
 </head>
 
@@ -25,15 +24,16 @@ button { padding:6px 10px; margin:3px; cursor:pointer; }
 
 <h3>📅 Aktif Hafta: <span id="haftaNo"></span></h3>
 
-<button onclick="yeniHafta()">🆕 Yeni Hafta Başlat</button>
+<button onclick="yeniHafta()">🆕 Yeni Hafta</button>
 <button onclick="gecmisiGoster()">📂 Geçmiş Haftalar</button>
+<button onclick="tumunuSifirla()">🗑️ Tüm Haftaları Sıfırla</button>
 
 <div id="gecmis"></div>
 
 <br>
 
 <h3>🏆 Bu Hafta En Çok Okuyan</h3>
-<input id="enCok" placeholder="Örn: Ahmet - 120 sayfa">
+<input placeholder="Örn: Ahmet - 120 sayfa">
 
 <br><br>
 
@@ -113,6 +113,13 @@ function haftaAc(no){
 let v=localStorage.getItem("hafta_"+no);
 if(v){
 document.body.innerHTML=v;
+}
+}
+
+function tumunuSifirla(){
+if(confirm("TÜM haftalar silinecek. Emin misin?")){
+localStorage.clear();
+location.reload();
 }
 }
 </script>
