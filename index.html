@@ -1,15 +1,45 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <title>Kitap Okuma Kulübü</title>
+
 <style>
 body { font-family: Arial; background:#f2f2f2; padding:20px; }
 h1,h2 { text-align:center; }
-table { width:100%; border-collapse:collapse; background:white; }
-th, td { border:1px solid #333; padding:8px; text-align:center; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+
+th, td {
+  border:1px solid #333;
+  padding:8px;
+  text-align:center;
+}
+
 th { background:#ddd; }
-input { width:95%; }
+
+input {
+  width:95%;
+}
+
+button {
+  padding:6px 10px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.geldi {
+  background:#b6fcb6;
+}
+
+.gelmedi {
+  background:#fcb6b6;
+}
 </style>
 </head>
 
@@ -31,22 +61,125 @@ input { width:95%; }
 <th>Katılım</th>
 </tr>
 
-<tr><td>Kerem Toç</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Umut Toç</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Ahmet Tiftik</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Yağmur Nisa Selet</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Arda Efe Akpınar</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Saim Efe</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Hüma</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Muhammed Hamza</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Talha</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
-<tr><td>Nil</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr>
+<td>Kerem Toç</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Umut Toç</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Ahmet Tiftik</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Yağmur Nisa Selet</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Arda Efe Akpınar</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Saim Efe</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Hüma</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Muhammed Hamza</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Talha</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
+
+<tr>
+<td>Nil</td>
+<td><input></td>
+<td><input type="number"></td>
+<td>
+<button onclick="geldi(this)">➕</button>
+<button onclick="gelmedi(this)">➖</button>
+</td>
+</tr>
 
 </table>
 
 <br>
 <h3>📅 Hafta Notu</h3>
 <input placeholder="Örn: 1. Hafta - Herkes geldi">
+
+<script>
+function geldi(btn) {
+  let satir = btn.parentElement.parentElement;
+  satir.classList.remove("gelmedi");
+  satir.classList.add("geldi");
+}
+
+function gelmedi(btn) {
+  let satir = btn.parentElement.parentElement;
+  satir.classList.remove("geldi");
+  satir.classList.add("gelmedi");
+}
+</script>
 
 </body>
 </html>
