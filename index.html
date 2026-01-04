@@ -4,75 +4,49 @@
 <meta charset="UTF-8">
 <title>Kitap Okuma Kulübü</title>
 <style>
-body { font-family: Arial; background:#f4f4f4; padding:20px; }
+body { font-family: Arial; background:#f2f2f2; padding:20px; }
 h1,h2 { text-align:center; }
 table { width:100%; border-collapse:collapse; background:white; }
-th,td { border:1px solid #ccc; padding:8px; text-align:center; }
+th, td { border:1px solid #333; padding:8px; text-align:center; }
+th { background:#ddd; }
 input { width:95%; }
-button { padding:5px 10px; }
-.geldi { background:#c8f7c5; }
-.gelmedi { background:#f7c5c5; }
 </style>
 </head>
+
 <body>
 
 <h1>📚 Kitap Okuma Kulübü</h1>
 <h2>Başkanlar: Kerem Toç & Umut Toç</h2>
 
+<h3>Bu Hafta En Çok Okuyan</h3>
+<input placeholder="Örn: Ahmet Tiftik - 120 sayfa">
+
+<br><br>
+
 <table>
 <tr>
 <th>İsim</th>
-<th>Okuduğu Kitap</th>
-<th>Durum</th>
+<th>Okunan Kitap</th>
+<th>Sayfa Sayısı</th>
+<th>Katılım</th>
 </tr>
 
-<script>
-const kisiler = [
-"Kerem Toç","Umut Toç","Ahmet Tiftik","Yağmur Nisa Selet",
-"Arda Efe Akpınar","Saim Efe","Hüma",
-"Muhammed Hamza","Talha","Nil"
-];
-
-kisiler.forEach((isim,i)=>{
-document.write(`
-<tr id="row${i}">
-<td>${isim}</td>
-<td><input id="kitap${i}" oninput="kaydet()"></td>
-<td>
-<button onclick="geldi(${i})">+</button>
-<button onclick="gelmedi(${i})">−</button>
-</td>
-</tr>
-`);
-});
-
-function geldi(i){
-const r=document.getElementById("row"+i);
-r.className="geldi";
-localStorage.setItem("durum"+i,"geldi");
-}
-function gelmedi(i){
-const r=document.getElementById("row"+i);
-r.className="gelmedi";
-localStorage.setItem("durum"+i,"gelmedi");
-}
-function kaydet(){
-kisiler.forEach((_,i)=>{
-localStorage.setItem("kitap"+i,
-document.getElementById("kitap"+i).value);
-});
-}
-window.onload=()=>{
-kisiler.forEach((_,i)=>{
-document.getElementById("kitap"+i).value=
-localStorage.getItem("kitap"+i)||"";
-const d=localStorage.getItem("durum"+i);
-if(d) document.getElementById("row"+i).className=d;
-});
-}
-</script>
+<tr><td>Kerem Toç</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Umut Toç</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Ahmet Tiftik</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Yağmur Nisa Selet</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Arda Efe Akpınar</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Saim Efe</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Hüma</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Muhammed Hamza</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Talha</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
+<tr><td>Nil</td><td><input></td><td><input type="number"></td><td>➕ ➖</td></tr>
 
 </table>
+
+<br>
+<h3>📅 Hafta Notu</h3>
+<input placeholder="Örn: 1. Hafta - Herkes geldi">
 
 </body>
 </html>
