@@ -1,107 +1,103 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Kitap Okuma Kulübü</title>
-  <style>
-    body { font-family: Arial; background:#f4f4f4; padding:20px }
-    h1 { text-align:center }
-    table { width:100%; border-collapse:collapse; background:white }
-    th, td { border:1px solid #ccc; padding:8px; text-align:center }
-    button { padding:5px 10px; cursor:pointer }
-    .yes { background:green; color:white }
-    .no { background:red; color:white }
-  </style>
+<meta charset="UTF-8">
+<title>📚 Kitap Kulübü</title>
+<style>
+body { font-family: Arial; background:#f4f4f4; padding:20px }
+table { width:100%; background:white; border-collapse:collapse }
+th,td { border:1px solid #ccc; padding:8px; text-align:center }
+button { padding:5px 10px; cursor:pointer }
+.yes { background:green; color:white }
+.no { background:red; color:white }
+#gecmis { margin-top:20px; background:white; padding:10px }
+</style>
 </head>
+
 <body>
 
 <h1>📚 Kitap Okuma Kulübü</h1>
-<p><b>Başkanlar:</b> Kerem Toç & Umut Toç</p>
 
-<button onclick="haftaBitir()">📅 Haftayı Bitir</button>
+<button onclick="haftayiKaydet()">📅 Haftayı Kaydet</button>
 <button onclick="gecmisiGoster()">📜 Geçmiş Haftalar</button>
+<button onclick="haftayiTemizle()">🗑️ Haftayı Temizle</button>
 
-<table>
-  <tr>
-    <th>İsim</th>
-    <th>Kitap</th>
-    <th>Sayfa</th>
-    <th>Geldi</th>
-    <th>Gelmedi</th>
-  </tr>
+<table id="tablo">
+<tr>
+<th>İsim</th>
+<th>Kitap</th>
+<th>Sayfa</th>
+<th>Geldi</th>
+<th>Gelmedi</th>
+</tr>
 </table>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    getDocs
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+<div id="gecmis"></div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCELizvEOUX_dG16HvCCkuRq4lXgRuy300",
-    authDomain: "kitap-kulubu-2b920.firebaseapp.com",
-    projectId: "kitap-kulubu-2b920",
-    storageBucket: "kitap-kulubu-2b920.firebasestorage.app",
-    messagingSenderId: "678535320880",
-    appId: "1:678535320880:web:5d204cbdc94cf42817a4f5"
-  };
+<script>
+const kisiler = [
+"Kerem Toç","Umut Toç","Ahmet Tiftik","Yağmur Nisa",
+"Arda Efe","Saim Efe","Hüma","Hamza","Talha","Nil"
+];
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const tablo = document.getElementById("tablo");
+let haftalikKayit = [];
 
-  const kisiler = [
-    "Kerem Toç","Umut Toç","Ahmet Tiftik","Yağmur Nisa Selet",
-    "Arda Efe Akpınar","Saim Efe","Hüma",
-    "Muhammed Hamza","Talha","Nil"
-  ];
+kisiler.forEach(isim => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${isim}</td>
+    <td><input></td>
+    <td><input type="number"></td>
+    <td><button class="yes">+</button></td>
+    <td><button class="no">-</button></td>
+  `;
+  tr.querySelector(".yes").onclick = () => kaydet(isim,true,tr);
+  tr.querySelector(".no").onclick = () => kaydet(isim,false,tr);
+  tablo.appendChild(tr);
+});
 
-  const table = document.querySelector("table");
+function kaydet(isim, geldi, tr){
+  const kitap = tr.children[1].children[0].value;
+  const sayfa = tr.children[2].children[0].value;
+  haftalikKayit.push({isim,kitap,sayfa, geldi});
+  alert(isim + " kaydedildi");
+}
 
-  kisiler.forEach(isim => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${isim}</td>
-      <td><input></td>
-      <td><input type="number"></td>
-      <td><button class="yes">+</button></td>
-      <td><button class="no">-</button></td>
-    `;
-
-    tr.querySelector(".yes").onclick = () => kaydet(isim, true, tr);
-    tr.querySelector(".no").onclick  = () => kaydet(isim, false, tr);
-
-    table.appendChild(tr);
-  });
-
-  async function kaydet(isim, geldi, tr) {
-    const kitap = tr.cells[1].querySelector("input").value;
-    const sayfa = tr.cells[2].querySelector("input").value;
-
-    await addDoc(collection(db, "haftalar"), {
-      isim,
-      kitap,
-      sayfa,
-      geldi,
-      tarih: new Date()
-    });
-
-    alert("Kaydedildi ✔️");
+function haftayiKaydet(){
+  if(haftalikKayit.length===0){
+    alert("Hiç kayıt yok");
+    return;
   }
+  let tumHaftalar = JSON.parse(localStorage.getItem("haftalar")||"[]");
+  tumHaftalar.push({
+    tarih: new Date().toLocaleDateString(),
+    kayitlar: haftalikKayit
+  });
+  localStorage.setItem("haftalar", JSON.stringify(tumHaftalar));
+  haftalikKayit=[];
+  haftayiTemizle();
+  alert("Hafta kaydedildi ✅");
+}
 
-  window.gecmisiGoster = async function () {
-    const snap = await getDocs(collection(db, "haftalar"));
-    let yazi = "";
-    snap.forEach(d => yazi += JSON.stringify(d.data()) + "\n");
-    alert(yazi);
-  };
+function gecmisiGoster(){
+  const alan = document.getElementById("gecmis");
+  alan.innerHTML="";
+  const haftalar = JSON.parse(localStorage.getItem("haftalar")||"[]");
 
-  window.haftaBitir = function () {
-    document.querySelectorAll("input").forEach(i => i.value = "");
-    alert("Yeni haftaya geçildi 📅");
-  };
+  haftalar.forEach((h,i)=>{
+    alan.innerHTML += `<h3>📅 Hafta ${i+1} (${h.tarih})</h3>`;
+    h.kayitlar.forEach(k=>{
+      alan.innerHTML += `
+        <p>${k.isim} – ${k.kitap} – ${k.sayfa} sayfa – 
+        ${k.geldi?"✅":"❌"}</p>`;
+    });
+  });
+}
+
+function haftayiTemizle(){
+  document.querySelectorAll("input").forEach(i=>i.value="");
+}
 </script>
 
 </body>
